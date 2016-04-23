@@ -15,8 +15,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  *
@@ -32,6 +31,12 @@ public class PasswordEncrypter extends javax.swing.JFrame {
         this.setSize(600, 400);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
+        try {
+            this.setIconImage( new javax.swing.ImageIcon(getClass().getResource("lock_logo.png")).getImage());
+        }
+        catch (Exception exc) {
+            exc.printStackTrace();
+        }
         jTextField2.setEditable(false);
         jTextField2.setVisible(false);
         jButton2.setVisible(false);
@@ -49,25 +54,21 @@ public class PasswordEncrypter extends javax.swing.JFrame {
         {
             try 
             {
-                String text = jTextField1.getText();
-                String key = "Bar12345Bar12345"; // 128 bit key
+                String text = jTextField1.getText()+"minu";
+                String key = "nishantencrypter"; // 128 bit key
                 // Create key and cipher
-                Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
+                Key aesKey = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
                 Cipher cipher = Cipher.getInstance("AES");
                 // encrypt the text
                 cipher.init(Cipher.ENCRYPT_MODE, aesKey);
                 byte[] encrypted = cipher.doFinal(text.getBytes());
-                String enc = new BASE64Encoder().encode(encrypted);
-            //  System.out.println(new String(encrypted));
+                //String enc = new BASE64Encoder().encode(encrypted);
+                byte [] encryptedBase64 = Base64.encodeBase64(encrypted);
+                String enc = new String(encryptedBase64);
                 jTextField2.setVisible(true);
                 jLabel3.setVisible(true);
                 jButton2.setVisible(true);
                 jTextField2.setText(enc);
-            // decrypt the text
-                cipher.init(Cipher.DECRYPT_MODE, aesKey);
-                byte [] decryptedValue64 = new BASE64Decoder().decodeBuffer(enc);
-                String decrypted = new String(cipher.doFinal(decryptedValue64));
-                System.out.println(decrypted);
             }
             catch(Exception ex) 
             {
@@ -95,6 +96,7 @@ public class PasswordEncrypter extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Encrypt Password");
 
         jLabel1.setFont(new java.awt.Font("Copperplate Gothic Bold", 0, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

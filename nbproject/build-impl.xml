@@ -1027,6 +1027,13 @@ is divided into following sections:
     <target name="-post-jar">
         <!-- Empty placeholder for easier customization. -->
         <!-- You can override this target in the ../build.xml file. -->
+        <jar jarfile="dist/Combined-password_encrypter.jar">
+    <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+    <zipfileset src="dist/lib/org-apache-commons-codec.jar" excludes="META-INF/*" />
+    <manifest>
+        <attribute name="Main-Class" value="${main.class}"/>
+    </manifest>
+  </jar>
     </target>
     <target depends="init,compile,-pre-jar,-do-jar-without-libraries,-do-jar-with-libraries,-post-jar" name="-do-jar"/>
     <target depends="init,compile,-pre-jar,-do-jar,-post-jar" description="Build JAR." name="jar"/>
